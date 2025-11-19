@@ -15,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -51,6 +61,7 @@ dotenv.config({
     path: path_1.default.join(__dirname, `../.env.${process.env.NODE_ENV}`),
 });
 const app = (0, express_1.default)();
+const spotify = require("./routes/spotify");
 const PORT = process.env.PORT || 4242;
 const cache = new node_cache_1.default({
     stdTTL: 3600,
@@ -64,7 +75,8 @@ console.log(process.env.MONGODB_URI);
         const dbServer = yield mongoose_1.default.connect(DATABASE_URL, {
             dbName: "spotify",
         });
-        console.log(`Connected to the ${dbServer.connection.db.databaseName} database @ host ${dbServer.connection.host}`);
+        // console.log(`Connected to the ${dbServer.connection.db.databaseName} database @ host ${dbServer.connection.host}`);
+        console.log(`Connected ... database @ host ${dbServer.connection.host}`);
     }
     catch (err) {
         console.error(err);
@@ -100,6 +112,7 @@ app.use(
 body_parser_1.default.json(), (0, cors_1.default)({
     origin: "*",
 }));
+app.use("/spotify", spotify);
 app.get("/", (_, response) => {
     response.send("Spotify Settings Una");
 });
@@ -232,7 +245,8 @@ app.post("/playlists", (request, response) => __awaiter(void 0, void 0, void 0, 
             }
         }));
         const dbPlaylists = yield playlist_1.Playlist.find();
-        response.status(200).json(dbPlaylists);
+        // response.status(200).json(dbPlaylists); //NOTE ceci derange les chose ches la client
+        response.status(200).json(playlists);
     }
     catch (error) {
         response.status(400).json({ error: "Something went wrong" });

@@ -17,6 +17,7 @@ dotenv.config({
 });
 
 const app: Express = express();
+const spotify = require("./routes/spotify");
 const PORT: number | string = process.env.PORT || 4242;
 const cache = new NodeCache({
     stdTTL: 3600,
@@ -32,7 +33,8 @@ console.log(process.env.MONGODB_URI);
         const dbServer = await mongoose.connect(DATABASE_URL, {
             dbName: "spotify",
         });
-        console.log(`Connected to the ${dbServer.connection.db.databaseName} database @ host ${dbServer.connection.host}`);
+        // console.log(`Connected to the ${dbServer.connection.db.databaseName} database @ host ${dbServer.connection.host}`);
+        console.log(`Connected ... database @ host ${dbServer.connection.host}`);
     } catch (err) {
         console.error(err);
     } finally {
@@ -69,6 +71,8 @@ app.use(
         origin: "*",
     })
 );
+
+app.use("/spotify", spotify);
 
 app.get("/", (_, response: Response) => {
     response.send("Spotify Settings Una");

@@ -15,7 +15,7 @@ interface User {
     uri: string;
 }
 
-interface IPlaylist extends Document {
+interface IPlaylist {
     _id: string;
     name: string;
     description: string;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.populatePlaylist = void 0;
+exports.populatePlaylist = populatePlaylist;
 const spotify_1 = require("./spotify");
 function populatePlaylist(response, cache, playlistID, Model, songs) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -50,4 +50,3 @@ function populatePlaylist(response, cache, playlistID, Model, songs) {
         }
     });
 }
-exports.populatePlaylist = populatePlaylist;

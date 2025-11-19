@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.populateFavourites = void 0;
+exports.populateFavourites = populateFavourites;
 const spotify_1 = require("./spotify");
 function populateFavourites(response, cache, Model, songs) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -50,4 +50,3 @@ function populateFavourites(response, cache, Model, songs) {
         }
     });
 }
-exports.populateFavourites = populateFavourites;
