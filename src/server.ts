@@ -72,6 +72,10 @@ app.use(
 app.use("/spotify", spotify);
 app.use("/blogs", blogs);
 
+app.get("/", (request: Request, response: Response) => {
+    response.send("hello world");
+});
+
 // =================================================================================================
 
 app.listen(PORT, () => {
