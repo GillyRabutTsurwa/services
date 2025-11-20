@@ -7,10 +7,6 @@ import SpotifyWebAPI from "spotify-web-api-node";
 import NodeCache from "node-cache";
 import mongoose from "mongoose";
 import { instantiateSpotify } from "./functions/spotify";
-import { Afrique, House, Favourites, Vapourwave } from "./models/track";
-import { Playlist } from "./models/playlist";
-import { populatePlaylist } from "./functions/playlists";
-import { populateFavourites } from "./functions/favourites";
 
 dotenv.config({
     path: path.join(__dirname, `../.env.${process.env.NODE_ENV}`),

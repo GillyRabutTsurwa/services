@@ -1,11 +1,6 @@
-import path from "path";
-import * as dotenv from "dotenv";
-import express, { Express, Request, Response } from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
+import express, { Request, Response } from "express";
 import SpotifyWebAPI from "spotify-web-api-node";
 import NodeCache from "node-cache";
-import mongoose from "mongoose";
 import { instantiateSpotify } from "../functions/spotify";
 import { Afrique, House, Favourites, Vapourwave } from "../models/track";
 import { Playlist } from "../models/playlist";
