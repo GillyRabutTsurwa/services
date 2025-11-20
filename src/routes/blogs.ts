@@ -1,12 +1,11 @@
 import express, { Request, Response } from "express";
-import clientSanity from "../services/sanity";
 import Post from "../models/post";
 import IPost from "../interface/post";
 
 const router = express.Router();
 
 router.get("/", async (_, response: Response) => {
-    const posts = await clientSanity.fetch("*[_type == 'post']");
+    const posts = await Post.find();
     response.json(posts);
 });
 
@@ -52,16 +51,17 @@ router.post("/", async (request: Request, response: Response) => {
     };
 
     const headers = request.headers;
-    // const post = response;
+    const post = request.body;
 
     console.log("Sanity webhook reçu:");
     console.log(headers);
+    console.log("-----------");
+    console.log(post);
     if (headers["sanity-operation"] === "create") {
         // await Post.findByIdAndDelete(headers["sanity-document-id"]);
         console.log(`Adding new post with id: ${headers["sanity-document-id"]}`);
         // await createPost(post);
     } else if (headers["sanity-operation"] === "update") {
-        console.log(`Updating body of post with id: ${headers["sanity-document-id"]}`);
         // const existingPost = await Post.findById(headers["sanity-document-id"]);
         // if (!existingPost) {
         //     await createPost(post);
@@ -78,7 +78,7 @@ router.post("/", async (request: Request, response: Response) => {
     console.log("======================================");
     console.log("======================================");
     console.log("======================================");
-    // console.log(post);
+    console.log(post);
 });
 
 module.exports = router;
