@@ -1,37 +1,10 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import Post from "../models/post";
-import { createPost, updatePost } from "../functions/posts";
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get("/", async (_, response: Response) => {
     const posts = await Post.find();
     response.json(posts);
 });
 
-// sanity webhook
-router.post("/", async (request: Request, _) => {
-    const headers = request.headers;
-    const post = request.body;
-
-    console.log("Sanity webhook reçu:");
-    if (headers["sanity-operation"] === "create") {
-        await Post.findByIdAndDelete(headers["sanity-document-id"]);
-        console.log(`Adding new post with id: ${headers["sanity-document-id"]}`);
-        await createPost(post);
-    } else if (headers["sanity-operation"] === "update") {
-        const existingPost = await Post.findById(headers["sanity-document-id"]);
-        if (!existingPost) {
-            await createPost(post);
-        } else {
-            console.log(`Updating body of post with id: ${headers["sanity-document-id"]}`);
-            await updatePost(post, headers["sanity-document-id"]);
-        }
-    } else if (headers["sanity-operation"] === "delete") {
-        console.log(`Deleting post with id: ${headers["sanity-document-id"]}`);
-        await Post.findByIdAndDelete(headers["sanity-document-id"]);
-    } else {
-        console.error("On peut pas le faire");
-    }
-});
-
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
 import path from "path";
 import * as dotenv from "dotenv";
-import express, { Express, Request, Response } from "express";
+import express, { Express, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import SpotifyWebAPI from "spotify-web-api-node";
@@ -8,13 +8,15 @@ import NodeCache from "node-cache";
 import mongoose from "mongoose";
 import { instantiateSpotify } from "./functions/spotify";
 
+import blogRouter from "./routes/blogs";
+import sanityRouter from "./routes/sanity";
+import spotifyRouter from "./routes/spotify";
+
 dotenv.config({
     path: path.join(__dirname, `../.env.${process.env.NODE_ENV}`),
 });
 
 const app: Express = express();
-const spotify = require("./routes/spotify");
-const blogs = require("./routes/blogs");
 const PORT: number | string = process.env.PORT || 4242;
 const cache = new NodeCache({
     stdTTL: 3600,
@@ -30,8 +32,7 @@ console.log(process.env.MONGODB_URI);
         const dbServer = await mongoose.connect(DATABASE_URL, {
             dbName: "gilbertrabuttsurwa",
         });
-        // console.log(`Connected to the ${dbServer.connection.db.databaseName} database @ host ${dbServer.connection.host}`);
-        console.log(`Connected ... database @ host ${dbServer.connection.host}`);
+        console.log(`Database connected @ host ${dbServer.connection.host}`);
     } catch (err) {
         console.error(err);
     } finally {
@@ -61,22 +62,14 @@ cache.on("expired", async (key: string, value: string) => {
     }
 });
 
-app.use(
-    // bodyParser.urlencoded({ extended: true }),
-    bodyParser.json(),
-    cors({
-        origin: "*",
-    })
-);
+app.use(bodyParser.json(), cors({ origin: "*" }));
+app.use("/sanity", sanityRouter);
+app.use("/spotify", spotifyRouter);
+app.use("/blogs", blogRouter);
 
-app.use("/spotify", spotify);
-app.use("/blogs", blogs);
-
-app.get("/", (request: Request, response: Response) => {
+app.get("/", (_, response: Response) => {
     response.send("hello world");
 });
-
-// =================================================================================================
 
 app.listen(PORT, () => {
     console.log("Server listening on Port", PORT);

@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import SpotifyWebAPI from "spotify-web-api-node";
 import NodeCache from "node-cache";
 import { instantiateSpotify } from "../functions/spotify";
@@ -11,7 +11,7 @@ const cache = new NodeCache({
     stdTTL: 3600,
 });
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get("/", (_, response: Response) => {
     response.send("Spotify Settings Una");
@@ -202,4 +202,4 @@ router.get("/playlists/liked", async (_, response: Response) => {
     await populateFavourites(response, cache, Favourites, songs);
 });
 
-module.exports = router;
+export default router;
