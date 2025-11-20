@@ -1,10 +1,10 @@
 import { createClient } from "@sanity/client";
 
-const sanityClient = createClient({
+const clientSanity = createClient({
     projectId: process.env.SANITY_PROJECT_ID,
     dataset: process.env.SANITY_ENV,
     apiVersion: process.env.SANITY_API_VERSION,
     useCdn: false,
 });
 
-export default sanityClient;
+export default clientSanity;
