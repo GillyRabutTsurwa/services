@@ -28,7 +28,7 @@ console.log(process.env.MONGODB_URI);
 (async () => {
     try {
         const dbServer = await mongoose.connect(DATABASE_URL, {
-            dbName: "spotify",
+            dbName: "gilbertrabuttsurwa",
         });
         // console.log(`Connected to the ${dbServer.connection.db.databaseName} database @ host ${dbServer.connection.host}`);
         console.log(`Connected ... database @ host ${dbServer.connection.host}`);
