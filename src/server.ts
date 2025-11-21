@@ -27,18 +27,29 @@ console.log(process.env.CLIENT_URL);
 console.log(process.env.CLIENT_REDIRECT_URI);
 console.log(process.env.MONGODB_URI);
 
-(async () => {
-    try {
-        const dbServer = await mongoose.connect(DATABASE_URL, {
-            dbName: "gilbertrabuttsurwa",
-        });
-        console.log(`Database connected @ host ${dbServer.connection.host}`);
-    } catch (err) {
-        console.error(err);
-    } finally {
-        mongoose.set("debug", true);
-    }
-})();
+export const mainConnection: mongoose.Connection = mongoose.createConnection(DATABASE_URL, {
+    dbName: "gilbertrabuttsurwa",
+});
+
+mainConnection.on("connected", () => {
+    console.log("Connecté");
+    console.log("DB Name:", mainConnection.name);
+    console.log("Host:", mainConnection.host);
+    console.log("Port:", mainConnection.port);
+    mongoose.set("debug", true);
+});
+
+export const auxConnection: mongoose.Connection = mongoose.createConnection(DATABASE_URL, {
+    dbName: "spotify",
+});
+
+auxConnection.on("connected", () => {
+    console.log("Connecté");
+    console.log("DB Name:", auxConnection.name);
+    console.log("Host:", auxConnection.host);
+    console.log("Port:", auxConnection.port);
+    mongoose.set("debug", true);
+});
 
 // Cached Token Handling
 cache.on("expired", async (key: string, value: string) => {
