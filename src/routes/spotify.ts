@@ -2,8 +2,8 @@ import express, { Request, Response, Router } from "express";
 import SpotifyWebAPI from "spotify-web-api-node";
 import NodeCache from "node-cache";
 import { instantiateSpotify } from "../functions/spotify";
-import { Afrique, House, Favourites, Vapourwave } from "../models/track";
-import { Playlist } from "../models/playlist";
+import Track from "../models/track";
+import Playlist from "../models/playlist";
 import { populatePlaylist } from "../functions/playlists";
 import { populateFavourites } from "../functions/favourites";
 
@@ -155,8 +155,6 @@ router.post("/playlists", async (request: Request, response: Response) => {
                 console.log("Done");
             }
         });
-        const dbPlaylists = await Playlist.find();
-        // response.status(200).json(dbPlaylists); //NOTE ceci derange les chose ches la client
         response.status(200).json(playlists);
     } catch (error) {
         response.status(400).json({ error: "Something went wrong" });
@@ -180,26 +178,6 @@ router.post("/playlist", async (request: Request, response: Response) => {
     } catch (err) {
         response.status(400).json({ error: err });
     }
-});
-
-router.get("/playlists/afrique", async (_, response: Response) => {
-    const songs = await Afrique.find();
-    await populatePlaylist(response, cache, "1x1JZBiYCWxOcinqkZnhGO", Afrique, songs);
-});
-
-router.get("/playlists/house", async (_, response: Response) => {
-    const songs = await House.find();
-    await populatePlaylist(response, cache, "6Fbu37ReQN0o2As9AAjMsy", House, songs);
-});
-
-router.get("/playlists/vapourwave", async (_, response: Response) => {
-    const songs = await Vapourwave.find();
-    await populatePlaylist(response, cache, "4E7Vswz1uCbsSyh3VF7Dj2", Vapourwave, songs);
-});
-
-router.get("/playlists/liked", async (_, response: Response) => {
-    const songs = await Favourites.find();
-    await populateFavourites(response, cache, Favourites, songs);
 });
 
 export default router;
