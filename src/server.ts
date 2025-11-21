@@ -6,6 +6,7 @@ import cors from "cors";
 import SpotifyWebAPI from "spotify-web-api-node";
 import NodeCache from "node-cache";
 import mongoose from "mongoose";
+import connectionDB from "./connections/mongo";
 import { instantiateSpotify } from "./functions/spotify";
 
 import blogRouter from "./routes/blogs";
@@ -23,33 +24,8 @@ const cache = new NodeCache({
 });
 const DATABASE_URL: string = process.env.MONGODB_URI as string;
 
-console.log(process.env.CLIENT_URL);
-console.log(process.env.CLIENT_REDIRECT_URI);
-console.log(process.env.MONGODB_URI);
-
-export const mainConnection: mongoose.Connection = mongoose.createConnection(DATABASE_URL, {
-    dbName: "gilbertrabuttsurwa",
-});
-
-mainConnection.on("connected", () => {
-    console.log("Connecté");
-    console.log("DB Name:", mainConnection.name);
-    console.log("Host:", mainConnection.host);
-    console.log("Port:", mainConnection.port);
-    mongoose.set("debug", true);
-});
-
-export const auxConnection: mongoose.Connection = mongoose.createConnection(DATABASE_URL, {
-    dbName: "spotify",
-});
-
-auxConnection.on("connected", () => {
-    console.log("Connecté");
-    console.log("DB Name:", auxConnection.name);
-    console.log("Host:", auxConnection.host);
-    console.log("Port:", auxConnection.port);
-    mongoose.set("debug", true);
-});
+export const mainConnection = connectionDB(DATABASE_URL, "gilbertrabuttsurwa");
+export const auxConnection = connectionDB(DATABASE_URL, "spotify");
 
 // Cached Token Handling
 cache.on("expired", async (key: string, value: string) => {
