@@ -45,7 +45,19 @@ cache.on("expired", async (key: string, value: string) => {
     }
 });
 
-app.use(bodyParser.json(), cors({ origin: "*" }));
+console.log(process.env.NODE_ENV);
+switch (process.env.NODE_ENV) {
+    case "development":
+    case "production":
+        app.use(bodyParser.json(), cors({ origin: "*" }));
+        break;
+    case "testing":
+        app.use(bodyParser.urlencoded({ extended: true }), cors({ origin: "*" }));
+        break;
+    default:
+        console.error("node environment variable has been improperly set");
+}
+
 app.use("/sanity", sanityRouter);
 app.use("/spotify", spotifyRouter);
 app.use("/blogs", blogRouter);
