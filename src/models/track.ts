@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import { auxConnection } from "../connections";
 import trackSchema from "../schemas/track";
 import ITrack from "../interface/track";
 
-const Track = mongoose.model<ITrack>("Track", trackSchema);
+const Track = auxConnection.model<ITrack>("Track", trackSchema);
 export default Track;
