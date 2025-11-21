@@ -6,7 +6,7 @@ import cors from "cors";
 import SpotifyWebAPI from "spotify-web-api-node";
 import NodeCache from "node-cache";
 import mongoose from "mongoose";
-import connectionDB from "./connections/mongo";
+import "./connections"; // démarre les connexions
 import { instantiateSpotify } from "./functions/spotify";
 
 import blogRouter from "./routes/blogs";
@@ -22,10 +22,6 @@ const PORT: number | string = process.env.PORT || 4242;
 const cache = new NodeCache({
     stdTTL: 3600,
 });
-const DATABASE_URL: string = process.env.MONGODB_URI as string;
-
-export const mainConnection = connectionDB(DATABASE_URL, "gilbertrabuttsurwa");
-export const auxConnection = connectionDB(DATABASE_URL, "spotify");
 
 // Cached Token Handling
 cache.on("expired", async (key: string, value: string) => {
