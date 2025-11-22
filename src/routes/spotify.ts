@@ -88,6 +88,28 @@ router.get("/me", async (request: Request, response: Response) => {
     }
 });
 
+// NOTE: not using this endpoint yet. coming shortly
+router.get("/me/playlists", async (_, response: Response) => {
+    const accessToken: string | undefined = cache.get("accessToken") as string;
+    if (!accessToken) {
+        response.status(401).json({ error: "Access Token Not Found In These Skreetz" });
+        return;
+    }
+    const spotifyAPI: SpotifyWebAPI = instantiateSpotify();
+    spotifyAPI.setAccessToken(accessToken);
+    try {
+        const réponse = await spotifyAPI.getMe();
+        const me = réponse.body.id;
+
+        const finalResponse = await spotifyAPI.getUserPlaylists(me);
+        const playlists = finalResponse.body.items;
+        console.log(playlists);
+        response.status(200).json(playlists);
+    } catch (error) {
+        response.status(400).json({ error: "something went wrong" });
+    }
+});
+
 // Get user info
 
 router.get("/:user", async (request: Request, response: Response) => {
@@ -111,6 +133,10 @@ router.get("/:user", async (request: Request, response: Response) => {
 // ================================================================================================
 
 // Track Management
+router.get("/playlists", async (_, response: Response) => {
+    const playlists = await Playlist.find();
+    response.status(200).json(playlists);
+});
 
 router.post("/playlists", async (request: Request, response: Response) => {
     const user = request.body.user;
